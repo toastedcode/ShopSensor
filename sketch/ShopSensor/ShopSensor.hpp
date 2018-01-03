@@ -10,13 +10,13 @@ class ShopSensor : public Component, TimerListener
 public:
   
    // Constructor.
-   ShopSensor();
+   ShopSensor(
+      const String& adapterId,
+      const String& serverUrl,
+      const int& pingTime);
 
    // Destructor.
    virtual ~ShopSensor();
-
-   void setAdapter(
-      const String& adapterId);
 
    virtual void setup();
 
@@ -31,14 +31,14 @@ public:
    virtual void timeout(
       Timer* timer);
 
-   static const int DEFAULT_PING_TIME = 1000;  // 1 second
-
 private:
 
    String adapterId;
 
-   Timer* pingTimer;
+   String serverUrl;
 
    int pingTime;
+
+   Timer* pingTimer;
 };
 

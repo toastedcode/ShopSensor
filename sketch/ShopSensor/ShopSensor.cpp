@@ -3,19 +3,15 @@
 #include "ToastBot.hpp"
 #include "WifiBoard.hpp"
 
-const int ShopSensor::DEFAULT_PING_TIME;
-
-ShopSensor::ShopSensor() :
+ShopSensor::ShopSensor(
+  const String& adapterId,
+  const String& serverUrl,
+  const int& pingTime) :
      Component("shopSensor"),
-     adapterId(""),
-     pingTime(DEFAULT_PING_TIME)
+     adapterId(adapterId),
+     serverUrl(serverUrl),
+     pingTime(pingTime)
 {
-   Properties properties = ToastBot::getProperties();
-
-   if (properties.isSet("pingTime"))
-   {
-      pingTime = properties.getInt("pingTime");
-   }
 }
 
 ShopSensor::~ShopSensor()
@@ -23,15 +19,9 @@ ShopSensor::~ShopSensor()
   Timer::freeTimer(pingTimer);
 }
 
-void ShopSensor::setAdapter(
-   const String& adapterId)
-{
-   this->adapterId = adapterId;
-}
-
 void ShopSensor::setup()
 {
-  pingTimer = Timer::newTimer("pingTimer", 250, Timer::PERIODIC, this);
+  pingTimer = Timer::newTimer("pingTimer", pingTime, Timer::PERIODIC, this);
   pingTimer->start();
 }
 
@@ -126,8 +116,7 @@ void ShopSensor::timeout(
       message->setMessageId("sensor.php");
       message->setSource(ToastBot::getId());
       message->setDestination(adapterId);
-      //message->set("url", "www.roboxes.com/pptp/machineStatus");
-      message->set("url", "10.1.50.237/pptp/machineStatus");
+      message->set("url", serverUrl);
       message->set("action", "ping");
       message->set("sensorId", ToastBot::getId());
        

@@ -11,17 +11,13 @@ class Counter : public Component, SensorListener, TimerListener
 
 public:
 
-   Counter();
+   Counter(
+      const String& adapterId,
+      const String& serverUrl,
+      const int& updateTime,
+      ShopSensorNamespace::Sensor* sensor);
 
    virtual ~Counter();
-
-   void update();
-
-   void setAdapter(
-      const String& adapterId);
-
-   void setSensor(
-      ShopSensorNamespace::Sensor* sensor);
 
    void setUpdateTime(
       const int& updateTime);
@@ -48,6 +44,8 @@ private:
    bool sendCount();
 
    String adapterId;
+
+   String serverUrl;
    
    ShopSensorNamespace::Sensor* sensor;
 

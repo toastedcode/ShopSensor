@@ -7,23 +7,21 @@
 //                                    Public
 // *****************************************************************************
 
-const int Counter::DEFAULT_UPDATE_TIME = 1000;  // 1 second
-
-Counter::Counter() :
-   Component("partCounter"),
-   adapterId(""),
-   sensor(0),
-   enabled(false),
-   updateTime(DEFAULT_UPDATE_TIME),
-   count(0)
+Counter::Counter(
+   const String& adapterId,
+   const String& serverUrl,
+   const int& updateTime,
+   ShopSensorNamespace::Sensor* sensor) :
+      Component("partCounter"),
+      adapterId(adapterId),
+      serverUrl(serverUrl),
+      updateTime(updateTime),
+      sensor(sensor),
+      enabled(false),
+      count(0)
 {
-   Properties properties = ToastBot::getProperties();
-
-   if (properties.isSet("updateTime"))
-   {
-      updateTime = properties.getInt("updateTime");
-   }
-   
+   sensor->setListener(this);
+  
    updateTimer = Timer::newTimer("counterTimer", updateTime, Timer::PERIODIC, this);
    updateTimer->start();
 }
@@ -31,29 +29,6 @@ Counter::Counter() :
 Counter::~Counter()
 {
   Timer::freeTimer(updateTimer);
-}
-
-void Counter::update()
-{
-}
-
-void Counter::setAdapter(
-   const String& adapterId)
-{
-   this->adapterId = adapterId;
-}
-
-void Counter::setSensor(
-   ShopSensorNamespace::Sensor* sensor)
-{
-   this->sensor = sensor;
-   sensor->setListener(this);
-}
-
-void Counter::setUpdateTime(
-  const int& updateTime)
-{
-   this->updateTime = updateTime;
 }
 
 void Counter::start()
@@ -134,13 +109,12 @@ bool Counter::sendCount()
    bool sent = false;
   
    Message* message = Messaging::newMessage();
-   
    if (message)
    {
       message->setMessageId("count");
       message->setSource(ToastBot::getId());
       message->setDestination(adapterId);
-      message->set("url", "www.roboxes.com/pptp");
+      message->set("url", serverUrl);
       message->set("count", count);
 
       sent = Messaging::send(message);
