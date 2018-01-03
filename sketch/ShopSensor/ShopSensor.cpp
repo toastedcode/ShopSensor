@@ -127,7 +127,7 @@ void ShopSensor::timeout(
       message->setSource(ToastBot::getId());
       message->setDestination(adapterId);
       //message->set("url", "www.roboxes.com/pptp/machineStatus");
-      message->set("url", "192.168.0.112/pptp/machineStatus");
+      message->set("url", "10.1.50.237/pptp/machineStatus");
       message->set("action", "ping");
       message->set("sensorId", ToastBot::getId());
        
