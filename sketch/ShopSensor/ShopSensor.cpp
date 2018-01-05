@@ -60,7 +60,6 @@ void ShopSensor::handleMessage(
    }
    else if (message->getMessageId() == "reset")
    {
-      Logger::logDebug("Resetting ...");
       Board::getBoard()->reset();
 
       message->setFree();
@@ -107,6 +106,22 @@ void ShopSensor::handleMessage(
 // **************************************************************************
 //                        TimerListener implementation
 
+void memoryTest()
+{
+   int bytes = 5;
+   
+   void* memoryPtr;
+   
+   while (memoryPtr = malloc(bytes))
+   {
+      free (memoryPtr);
+      bytes += 5;
+   }
+
+   Logger::logDebug("Free heap: %d", ESP.getFreeHeap());
+   Logger::logDebug("Largest chunk: %d bytes", bytes);
+}
+
 void ShopSensor::timeout(
    Timer* timer)
 {
@@ -122,5 +137,8 @@ void ShopSensor::timeout(
        
       Messaging::send(message);
    }
+
+   // Log free memory.
+   memoryTest();
 }
 

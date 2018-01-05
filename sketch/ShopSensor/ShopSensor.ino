@@ -21,15 +21,14 @@ WebServer webServer(80);
 void setup()
 {
    ToastBot::setup(new Esp8266Board());
-
-   /*
+   
    // Extract properties.
    Properties& properties = ToastBot::getProperties();
    int pingTime = properties.isSet("pingTime") ? properties.getInt("pingTime") : DEFAULT_PING_TIME;
    int updateTime = properties.isSet("updateTime") ? properties.getInt("updateTime") : DEFAULT_UPDATE_TIME;
    String serverUrl = properties.isSet("serverUrl") ? properties.getString("serverUrl") : DEFAULT_SERVER_URL;
    int sensorPin = properties.isSet("sensorPin") ? properties.getInt("sensorPin") : DEFAULT_SENSOR_PIN;
-
+   
    Adapter* adapter = new HttpClientAdapter("httpAdapter", new JsonProtocol());
    ToastBot::addComponent(adapter);
    
@@ -42,12 +41,10 @@ void setup()
 
    Counter* counter = new Counter("httpAdapter", serverUrl, updateTime, sensor);
    ToastBot::addComponent(counter);
-   */
+   counter->start();
 
    webServer.setup();
    webServer.addPage(new PropertiesPage());
-
-   //counter->start();
 }
 
 void loop()
