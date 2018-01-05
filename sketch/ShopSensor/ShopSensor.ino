@@ -1,10 +1,11 @@
 #include <Board.h>
 #include <ToastBot.h>
 
-#include "ConfigPage.hpp"
 #include "Counter.hpp"
 #include "PhotoelectricSwitchSensor.hpp"
+#include "PropertiesPage.hpp"
 #include "ShopSensor.hpp"
+#include "Webserver.hpp"
 
 // *****************************************************************************
 //                                  Arduino
@@ -15,12 +16,13 @@ int DEFAULT_UPDATE_TIME = 5000;  // 5 seconds
 String DEFAULT_SERVER_URL = "";
 int DEFAULT_SENSOR_PIN = 1;
 
+WebServer webServer(80);
+
 void setup()
 {
    ToastBot::setup(new Esp8266Board());
 
-   Logger::setLogLevel(DEBUG_FINEST);
-
+   /*
    // Extract properties.
    Properties& properties = ToastBot::getProperties();
    int pingTime = properties.isSet("pingTime") ? properties.getInt("pingTime") : DEFAULT_PING_TIME;
@@ -40,17 +42,17 @@ void setup()
 
    Counter* counter = new Counter("httpAdapter", serverUrl, updateTime, sensor);
    ToastBot::addComponent(counter);
-
-   /*
-   WebServerAdapter* webServerAdapter = new WebServerAdapter("web", 80);
-   ToastBot::addComponent(webServerAdapter);
-   webServerAdapter->addPage(new ConfigPage());
    */
 
-   counter->start();
+   webServer.setup();
+   webServer.addPage(new PropertiesPage());
+
+   //counter->start();
 }
 
 void loop()
 {
    ToastBot::loop();
+
+   webServer.loop();
 }
