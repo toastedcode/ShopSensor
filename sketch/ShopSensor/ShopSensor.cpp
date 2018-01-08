@@ -92,7 +92,7 @@ void ShopSensor::handleMessage(
          }
          else
          {
-            properties.remove(propertyName);
+            properties.erase(propertyName);
             Logger::logDebug("ShopSensor::handleMessage: Removed property: %s", propertyName.c_str());
          }
 
