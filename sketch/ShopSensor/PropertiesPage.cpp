@@ -43,7 +43,7 @@ bool PropertiesPage::handle(
    {
       String propertyName = arguments.getString("propertyName");
       
-      properties.remove(propertyName);
+      properties.erase(propertyName);
       properties.save();
    }
    else if (action == "reset")
@@ -61,12 +61,9 @@ void PropertiesPage::replaceContent(
 
   Properties& properties = ToastBot::getProperties();
 
-  Set<String> keys;
-  properties.getKeys(keys);
-
-  for (Set<String>::Iterator it = keys.begin(); it != keys.end(); it++)
+  for (Properties::Iterator it = properties.begin(); it != properties.end(); it++)
   {
-     getPropertyDiv(*it, properties.getString(*it), propertiesContent);
+     getPropertyDiv(it->first, it->second, propertiesContent);
   }
 
   content.replace("%properties", propertiesContent);
