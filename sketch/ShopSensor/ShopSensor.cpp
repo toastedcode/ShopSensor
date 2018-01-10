@@ -54,52 +54,7 @@ void ShopSensor::handleMessage(
          }
 
          Messaging::send(reply);
-
-         message->setFree();
       }
-   }
-   else if (message->getMessageId() == "reset")
-   {
-      Board::getBoard()->reset();
-
-      message->setFree();
-   }
-   else if (message->getMessageId() == "properties")
-   {
-      Properties& properties = ToastBot::getProperties();
-    
-      Logger::logDebug("ShopSensor::handleMessage: Properties:");
-      properties.log();
-   }
-   else if (message->getMessageId() == "property")
-   {
-      String propertyName = message->getString("name");
-      String propertyValue = message->getString("value");
-
-      Properties& properties = ToastBot::getProperties();
-
-      if (propertyName == "")
-      {
-         Logger::logDebug("ShopSensor::handleMessage: Properties:");
-         properties.log();
-      }
-      else
-      {
-         if (propertyValue != "")
-         {
-            properties.set(propertyName, propertyValue);
-            Logger::logDebug("ShopSensor::handleMessage: Updated properties: %s = %s", propertyName.c_str(), propertyValue.c_str());
-         }
-         else
-         {
-            properties.erase(propertyName);
-            Logger::logDebug("ShopSensor::handleMessage: Removed property: %s", propertyName.c_str());
-         }
-
-         properties.save();
-      }
-
-      message->setFree();
    }
 }
 
